@@ -1,5 +1,6 @@
 const characters = document.getElementById('characters')
-const url = 'https://rickandmortyapi.com/api/character'
+let numPage = 1
+let url = `https://rickandmortyapi.com/api/character/?page=${numPage}`
 
 const setObserver = (observable) => {
     let options = {
@@ -16,6 +17,24 @@ const setObserver = (observable) => {
             }
         })
     }, options)
+    observer.observe(observable)
+}
+const observeGetCharacters = (observable) => {
+    let options = {
+        root: null,
+        rootMargin: '200px 0px 0px 0px',
+        threshold: 0,
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                url = `https://rickandmortyapi.com/api/character/?page=${++numPage}`
+                getCharacters()
+            }
+        }, options)
+    })
+
     observer.observe(observable)
 }
 const createCharacter = (character) => {
@@ -76,15 +95,20 @@ const createCharacter = (character) => {
 }
 
 const getCharacters = async () => {
-    const response = await fetch(url)
-    const { results } = await response.json()
+    try {
+        const response = await fetch(url)
+        const { results } = await response.json()
 
-    const fragment = document.createDocumentFragment()
-    results.forEach((character) => {
-        const characterElement = createCharacter(character)
-        fragment.appendChild(characterElement)
-    })
-    characters.appendChild(fragment)
+        const fragment = document.createDocumentFragment()
+        results.forEach((character) => {
+            const characterElement = createCharacter(character)
+            fragment.appendChild(characterElement)
+        })
+        characters.appendChild(fragment)
+        observeGetCharacters(characters.lastElementChild)
+    } catch (error) {
+        console.log('something went wrong')
+    }
 }
 
 getCharacters()

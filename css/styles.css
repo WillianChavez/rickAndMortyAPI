@@ -118,9 +118,11 @@ body {
     list-style: none;
     display: flex;
     justify-content: space-evenly;
+    align-items: stretch;
     gap: 1em;
+    flex-wrap: wrap;
 }
-@media only screen and (max-width: 550px) {
+@media only screen and (max-width: 800px) {
     .categories {
         flex-direction: column;
     }
