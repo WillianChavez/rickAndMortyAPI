@@ -47,6 +47,7 @@ const createCharacter = (character) => {
     characterImgContainer.setAttribute('class', 'character__img')
     const characterImg = document.createElement('img')
     characterImg.setAttribute('src', character.image)
+    characterImg.setAttribute('alt', character.name)
 
     characterImgContainer.append(characterImg)
 
@@ -111,4 +112,4 @@ const getCharacters = async () => {
     }
 }
 
-getCharacters()
+window.addEventListener('load', getCharacters)
